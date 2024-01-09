@@ -5,7 +5,7 @@ from time import localtime, time
 from calendar import monthrange
 import calendar
 
-start_time = 7.5 * 3600
+start_time = 7.75 * 3600
 end_time = 17.5 * 3600
 working_days = (calendar.SUNDAY, calendar.MONDAY, calendar.TUESDAY, calendar.WEDNESDAY, calendar.THURSDAY)
 salary = 360
