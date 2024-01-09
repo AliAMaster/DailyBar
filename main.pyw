@@ -25,10 +25,7 @@ class Dialog(QDialog):
         a.addWidget(self.weekly_bar)
         self.monthly_bar = QProgressBar()
         self.monthly_bar.setStyleSheet("QProgressBar::chunk { background-color: #618264; }""QProgressBar { text-align: center; }")
-        self.earning = QLabel()
-        self.earning.setAlignment(Qt.AlignCenter)
         a.addWidget(self.monthly_bar)
-        a.addWidget(self.earning)
         self.setLayout(a)
         self.update_bars()
         timer = QTimer(self)
@@ -36,39 +33,28 @@ class Dialog(QDialog):
         timer.start(30000)
 
     def update_bars(self):
-        self.daily_bar.setValue(day_progress())
-        self.weekly_bar.setValue(week_progress())
-        self.monthly_bar.setValue(month_progress())
-        self.earning.setText(earning_calc())
+        a = calculations()
+        self.daily_bar.setValue(a[0])
+        self.weekly_bar.setValue(a[1])
+        self.monthly_bar.setValue(a[2])
+        self.monthly_bar.setFormat(a[3])
 
 
-def day_progress():
-    global start_time
-    global end_time
-    curr_time = localtime(time())
-    current = curr_time.tm_hour * 3600 + curr_time.tm_min * 60 + curr_time.tm_sec
-    return int((current - start_time) * 100 / (end_time - start_time))
-
-
-def week_progress():
+def calculations():
     global start_time
     global end_time
     global working_days
-    curr_time = localtime(time())
-    wday = curr_time.tm_wday + 1 if curr_time.tm_wday < 5 else curr_time.tm_wday - 6
-    current = wday * (end_time - start_time) + curr_time.tm_hour * 3600 + curr_time.tm_min * 60 + curr_time.tm_sec
-    return int((current - start_time) * 100 / (working_days * (end_time - start_time)))
-
-
-def month_progress():
-    curr_time = localtime(time())
-    current = curr_time.tm_mday * 86400 + curr_time.tm_hour * 3600 + curr_time.tm_min * 60 + curr_time.tm_sec
-    return int(current * 100 / (monthrange(curr_time.tm_year, curr_time.tm_mon)[1] * 86400))
-
-
-def earning_calc():
     global salary
-    return str(int(salary * month_progress() / 100))
+    curr_time = localtime(time())
+    day_tot_secs = end_time - start_time
+    day_secs = curr_time.tm_hour * 3600 + curr_time.tm_min * 60 + curr_time.tm_sec - start_time
+    wday = curr_time.tm_wday + 1 if curr_time.tm_wday < 5 else curr_time.tm_wday - 6
+    week_tot_secs = working_days * day_tot_secs
+    week_secs = wday * day_tot_secs + day_secs
+    month_tot_secs = monthrange(curr_time.tm_year, curr_time.tm_mon)[1] * 86400
+    month_secs = (curr_time.tm_mday - 1) * 86400 + day_secs + start_time
+    return min(100, int(day_secs * 100 / day_tot_secs)), min(100, int(week_secs * 100 / week_tot_secs)), min(100, int(month_secs * 100 / month_tot_secs)), str(
+        min(float(salary), round(month_secs * salary / month_tot_secs, 3)))
 
 
 app = QApplication()
