@@ -1,12 +1,13 @@
 from sys import exit
-from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QProgressBar, QStyleFactory, QLabel
+from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QProgressBar, QStyleFactory
 from PySide6.QtCore import Qt, QTimer
 from time import localtime, time
 from calendar import monthrange
+import calendar
 
 start_time = 7.5 * 3600
 end_time = 17.66 * 3600
-working_days = 5
+working_days = (calendar.SUNDAY, calendar.MONDAY, calendar.TUESDAY, calendar.WEDNESDAY, calendar.THURSDAY)
 salary = 360
 
 
@@ -48,9 +49,8 @@ def calculations():
     curr_time = localtime(time())
     day_tot_secs = end_time - start_time
     day_secs = curr_time.tm_hour * 3600 + curr_time.tm_min * 60 + curr_time.tm_sec - start_time
-    wday = curr_time.tm_wday + 1 if curr_time.tm_wday < 5 else curr_time.tm_wday - 6
-    week_tot_secs = working_days * day_tot_secs
-    week_secs = wday * day_tot_secs + day_secs
+    week_tot_secs = len(working_days) * day_tot_secs
+    week_secs = working_days.index(curr_time.tm_wday) * day_tot_secs + day_secs
     month_tot_secs = monthrange(curr_time.tm_year, curr_time.tm_mon)[1] * 86400
     month_secs = (curr_time.tm_mday - 1) * 86400 + day_secs + start_time
     return min(100, int(day_secs * 100 / day_tot_secs)), min(100, int(week_secs * 100 / week_tot_secs)), min(100, int(month_secs * 100 / month_tot_secs)), str(
