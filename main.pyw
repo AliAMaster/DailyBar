@@ -57,8 +57,9 @@ def calculations():
         week_secs = 0
     month_tot_secs = monthrange(curr_time.tm_year, curr_time.tm_mon)[1] * 86400
     month_secs = (curr_time.tm_mday - 1) * 86400 + day_secs + start_time
-    return min(100, int(day_secs * 100 / day_tot_secs)), min(100, int(week_secs * 100 / week_tot_secs)), min(100, int(month_secs * 100 / month_tot_secs)), '{0:.3f}'.format(
-        min(float(salary), round(month_secs * salary / month_tot_secs, 3)))
+    return min(100, int(day_secs * 100 / day_tot_secs)), min(100, int(week_secs * 100 / week_tot_secs)), min(100,
+                                                                                                             int(month_secs * 100 / month_tot_secs)), '{0:.2f}'.format(
+        min(100, month_secs * 100 / month_tot_secs)) + "% | " + '{0:.3f}'.format(min(float(salary), round(month_secs * salary / month_tot_secs, 3)))
 
 
 app = QApplication()
