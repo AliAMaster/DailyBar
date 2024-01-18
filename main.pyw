@@ -12,6 +12,7 @@ salary = 360
 job_start_date = (5, 6, 2022)
 yearly_holidays = 30
 holidays_enjoyed = 39
+target_holidays = 30
 
 start_time = (start_time[0] + start_time[1] / 60) * 3600
 end_time = (end_time[0] + end_time[1] / 60) * 3600
@@ -34,6 +35,9 @@ class Dialog(QDialog):
         self.monthly_bar = QProgressBar()
         self.monthly_bar.setStyleSheet("QProgressBar::chunk { background-color: #618264; }""QProgressBar { text-align: center; }")
         a.addWidget(self.monthly_bar)
+        self.holiday_bar = QProgressBar()
+        self.holiday_bar.setStyleSheet("QProgressBar::chunk { background-color: #AEBDCA; }""QProgressBar { text-align: center; }")
+        a.addWidget(self.holiday_bar)
         self.setLayout(a)
         self.update_bars()
         timer = QTimer(self)
@@ -59,9 +63,11 @@ class Dialog(QDialog):
         self.monthly_bar.setValue(month_progress)
 
         amount_earned = month_secs * salary / month_tot_secs
-        holidays_earned = delta_days(job_start_date, curr_time)-holidays_enjoyed
-        self.monthly_bar.setFormat('{0:.2f}'.format(month_progress) + "%  |  " + '{0:.3f}'.format(amount_earned) + " | " + '{0:.2f}'.format(
-            holidays_earned) + " days")
+        self.monthly_bar.setFormat('{0:.2f}'.format(month_progress) + "%  |  " + '{0:.3f}'.format(amount_earned))
+
+        holidays_earned = delta_days(job_start_date, curr_time) - holidays_enjoyed
+        self.holiday_bar.setValue(holidays_earned * 100 / target_holidays)
+        self.holiday_bar.setFormat('{0:.2f}'.format(holidays_earned) + " days")
 
 
 def days_in_year(year):
