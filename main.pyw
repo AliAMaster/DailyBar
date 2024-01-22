@@ -39,10 +39,21 @@ class Dialog(QDialog):
         self.holiday_bar.setStyleSheet("QProgressBar::chunk { background-color: #013C4D; }""QProgressBar { text-align: center; }")
         a.addWidget(self.holiday_bar)
         self.setLayout(a)
+        self.init_update()
         self.update_bars()
         timer = QTimer(self)
         timer.timeout.connect(self.update_bars)
         timer.start(5000)
+
+    def init_update(self):
+        curr_time = localtime(time())
+        holidays_earned = delta_days(job_start_date, curr_time) - holidays_enjoyed
+        self.holiday_bar.setValue(holidays_earned * 100 / target_holidays)
+
+        holiday_start_date = suffrage_calc(job_start_date, holidays_enjoyed + target_holidays)
+        self.holiday_bar.setFormat(
+            '{0:.2f}'.format(holidays_earned) + " days" + "  |  " + str(holiday_start_date.tm_mday) + " " + month_name[holiday_start_date.tm_mon] + " " + str(
+                holiday_start_date.tm_year))
 
     def update_bars(self):
         curr_time = localtime(time())
@@ -65,13 +76,7 @@ class Dialog(QDialog):
         amount_earned = month_secs * salary / month_tot_secs
         self.monthly_bar.setFormat('{0:.2f}'.format(month_progress) + "%  |  " + '{0:.3f}'.format(amount_earned))
 
-        holidays_earned = delta_days(job_start_date, curr_time) - holidays_enjoyed
-        self.holiday_bar.setValue(holidays_earned * 100 / target_holidays)
 
-        holiday_start_date = suffrage_calc(job_start_date, holidays_enjoyed + target_holidays)
-        self.holiday_bar.setFormat(
-            '{0:.2f}'.format(holidays_earned) + " days" + "  |  " + str(holiday_start_date.tm_mday) + " " + month_name[holiday_start_date.tm_mon] + " " + str(
-                holiday_start_date.tm_year))
 
 
 def days_in_year(year: int):
