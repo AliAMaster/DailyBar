@@ -70,7 +70,7 @@ class Dialog(QDialog):
 
         holiday_start_date = suffrage_calc(curr_time, target_holidays - holidays_earned)
         self.holiday_bar.setFormat(
-            '{0:.2f}'.format(holidays_earned) + " days" + " | " + str(holiday_start_date.tm_mday) + " " + month_name[holiday_start_date.tm_mon] + " " + str(
+            '{0:.2f}'.format(holidays_earned) + " days" + "  |  " + str(holiday_start_date.tm_mday) + " " + month_name[holiday_start_date.tm_mon] + " " + str(
                 holiday_start_date.tm_year))
 
 
