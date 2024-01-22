@@ -68,7 +68,7 @@ class Dialog(QDialog):
         holidays_earned = delta_days(job_start_date, curr_time) - holidays_enjoyed
         self.holiday_bar.setValue(holidays_earned * 100 / target_holidays)
 
-        holiday_start_date = suffrage_calc(curr_time, target_holidays - holidays_earned)
+        holiday_start_date = suffrage_calc(job_start_date, holidays_enjoyed + target_holidays)
         self.holiday_bar.setFormat(
             '{0:.2f}'.format(holidays_earned) + " days" + "  |  " + str(holiday_start_date.tm_mday) + " " + month_name[holiday_start_date.tm_mon] + " " + str(
                 holiday_start_date.tm_year))
@@ -120,7 +120,7 @@ def suffrage_calc(start: struct_time, days: float):
         return struct_time((start.tm_year, month, days, 0, 0, 0, 0, 0, 0))
     else:
         days -= delta_days(start, struct_time((start.tm_year, 12, 31, 0, 0, 0, 0, 0, 0)))
-        year = start.tm_year
+        year = start.tm_year + 1
         while True:
             if days > yearly_holidays:
                 days -= yearly_holidays
