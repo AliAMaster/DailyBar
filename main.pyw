@@ -77,8 +77,6 @@ class Dialog(QDialog):
         self.monthly_bar.setFormat('{0:.2f}'.format(month_progress) + "%  |  " + '{0:.3f}'.format(amount_earned))
 
 
-
-
 def days_in_year(year: int):
     a = 0
     for i in range(1, 13):
