@@ -2,7 +2,7 @@ from sys import exit
 from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QProgressBar, QStyleFactory
 from PySide6.QtCore import Qt, QTimer
 from time import localtime, time, struct_time
-from calendar import monthrange
+from calendar import monthrange, month_name
 import calendar
 
 start_time = (7, 45)
@@ -12,7 +12,7 @@ salary = 360
 job_start_date = (5, 6, 2022)
 yearly_holidays = 30
 holidays_enjoyed = 39
-target_holidays = 30
+target_holidays = 20
 
 start_time = (start_time[0] + start_time[1] / 60) * 3600
 end_time = (end_time[0] + end_time[1] / 60) * 3600
@@ -36,7 +36,7 @@ class Dialog(QDialog):
         self.monthly_bar.setStyleSheet("QProgressBar::chunk { background-color: #618264; }""QProgressBar { text-align: center; }")
         a.addWidget(self.monthly_bar)
         self.holiday_bar = QProgressBar()
-        self.holiday_bar.setStyleSheet("QProgressBar::chunk { background-color: #AEBDCA; }""QProgressBar { text-align: center; }")
+        self.holiday_bar.setStyleSheet("QProgressBar::chunk { background-color: #013C4D; }""QProgressBar { text-align: center; }")
         a.addWidget(self.holiday_bar)
         self.setLayout(a)
         self.update_bars()
@@ -67,10 +67,14 @@ class Dialog(QDialog):
 
         holidays_earned = delta_days(job_start_date, curr_time) - holidays_enjoyed
         self.holiday_bar.setValue(holidays_earned * 100 / target_holidays)
-        self.holiday_bar.setFormat('{0:.2f}'.format(holidays_earned) + " days")
+
+        holiday_start_date = suffrage_calc(curr_time, target_holidays - holidays_earned)
+        self.holiday_bar.setFormat(
+            '{0:.2f}'.format(holidays_earned) + " days" + " | " + str(holiday_start_date.tm_mday) + " " + month_name[holiday_start_date.tm_mon] + " " + str(
+                holiday_start_date.tm_year))
 
 
-def days_in_year(year):
+def days_in_year(year: int):
     a = 0
     for i in range(1, 13):
         a = a + monthrange(year, i)[1]
@@ -97,10 +101,41 @@ def delta_days(start: struct_time, end: struct_time):
             a = a + monthrange(start.tm_year, i)[1]
         a = a + end.tm_mday
         return a * yearly_holidays / days_in_year(start.tm_year)
-    elif end.tm_mday > start.tm_mday:
+    elif end.tm_mday >= start.tm_mday:
         return (end.tm_mday - start.tm_mday + 1) * yearly_holidays / days_in_year(start.tm_year)
     else:
-        return 0
+        return delta_days(start=end, end=start)
+
+
+def suffrage_calc(start: struct_time, days: float):
+    if days < delta_days(start, struct_time((start.tm_year, 12, 31, 0, 0, 0, 0, 0, 0))):
+        month = start.tm_mon
+        days = int(days * days_in_year(start.tm_year) / yearly_holidays)
+        while True:
+            if days <= monthrange(start.tm_year, month)[1]:
+                break
+            else:
+                days -= monthrange(start.tm_year, month)[1]
+                month += 1
+        return struct_time((start.tm_year, month, days, 0, 0, 0, 0, 0, 0))
+    else:
+        days -= delta_days(start, struct_time((start.tm_year, 12, 31, 0, 0, 0, 0, 0, 0)))
+        year = start.tm_year
+        while True:
+            if days > yearly_holidays:
+                days -= yearly_holidays
+                year += 1
+            else:
+                break
+        month = 1
+        days = int(days * days_in_year(start.tm_year) / yearly_holidays)
+        while True:
+            if days <= monthrange(year, month)[1]:
+                break
+            else:
+                days -= monthrange(year, month)[1]
+                month += 1
+        return struct_time((year, month, days, 0, 0, 0, 0, 0, 0))
 
 
 app = QApplication()
