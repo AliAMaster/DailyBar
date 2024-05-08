@@ -9,7 +9,8 @@ import calendar
 start_time = (7, 45)
 end_time = (17, 30)
 working_days = (calendar.SUNDAY, calendar.MONDAY, calendar.TUESDAY, calendar.WEDNESDAY, calendar.THURSDAY)
-salary = 360
+salary = 375
+misc_pending_payments = 140
 job_start_date = date(2022, 6, 5)
 yearly_holidays = 30
 holidays_enjoyed = 39
@@ -47,7 +48,7 @@ class Dialog(QDialog):
 
     def init_update(self):
         curr_time = date.today()
-        holidays_earned = holiday_calc(job_start_date, curr_time) - holidays_enjoyed
+        holidays_earned = min(max(holiday_calc(job_start_date, curr_time) - holidays_enjoyed, 0.0), target_holidays)
         self.holiday_bar.setValue(holidays_earned * 100 / target_holidays)
 
         holiday_start_date = suffrage_calc(job_start_date, holidays_enjoyed + target_holidays)
@@ -74,7 +75,7 @@ class Dialog(QDialog):
         self.monthly_bar.setValue(month_progress)
 
         amount_earned = month_secs * salary / month_tot_secs
-        self.monthly_bar.setFormat('{0:.2f}'.format(month_progress) + "%  |  " + '{0:.3f}'.format(amount_earned))
+        self.monthly_bar.setFormat('{0:.2f}'.format(month_progress) + "%  |  " + '{0:.3f}'.format(amount_earned) + " | " + str(misc_pending_payments))
 
 
 def days_in_year(year: int):
