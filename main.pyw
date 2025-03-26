@@ -11,9 +11,12 @@ end_time = (17, 30)
 working_days = (calendar.SUNDAY, calendar.MONDAY, calendar.TUESDAY, calendar.WEDNESDAY, calendar.THURSDAY)
 job_start_date = date(2022, 6, 5)
 yearly_holidays = 30
-holidays_enjoyed = 39
-target_holidays = 30
+holidays_enjoyed = 65
+target_holidays = 20
 planned_holiday = None
+salary = 550
+salary_paid_till = date(2025, 2, 28)
+other_funds = 130
 
 start_time = (start_time[0] + start_time[1] / 60) * 3600
 end_time = (end_time[0] + end_time[1] / 60) * 3600
@@ -73,7 +76,7 @@ class Dialog(QDialog):
         month_progress = month_secs * 100 / month_tot_secs
         self.monthly_bar.setValue(int(month_progress))
 
-        self.monthly_bar.setFormat('{0:.2f}'.format(month_progress) + "%")
+        self.monthly_bar.setFormat('{0:.2f}'.format(month_progress) + "% | " +  str(round(calc_amount(month_progress), 3)))
 
         if planned_holiday is not None:
             self.holiday_bar.setFormat(planned_holiday_calc(planned_holiday))
@@ -116,6 +119,11 @@ def planned_holiday_calc(dt: datetime):
     a = str(dt - datetime.now())
     a = a[:a.find(".")]
     return a
+
+def calc_amount(current_month_percent):
+    month_counter = date.today().month - salary_paid_till.month - 1
+    previous_month_percent = (monthrange(salary_paid_till.year, salary_paid_till.month)[1] - salary_paid_till.day) / monthrange(salary_paid_till.year, salary_paid_till.month)[1]
+    return (month_counter + current_month_percent / 100 + previous_month_percent) * salary
 
 
 app = QApplication()
