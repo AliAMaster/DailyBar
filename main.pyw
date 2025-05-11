@@ -14,9 +14,9 @@ yearly_holidays = 30
 holidays_enjoyed = 65
 target_holidays = 20
 planned_holiday = None
-salary = 550
-salary_paid_till = date(2025, 2, 28)
-other_funds = 130
+salary = 0
+salary_paid_till = date(2025, 4, 30)
+other_funds = 0
 
 start_time = (start_time[0] + start_time[1] / 60) * 3600
 end_time = (end_time[0] + end_time[1] / 60) * 3600
