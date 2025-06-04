@@ -11,11 +11,11 @@ end_time = (17, 30)
 working_days = (calendar.SUNDAY, calendar.MONDAY, calendar.TUESDAY, calendar.WEDNESDAY, calendar.THURSDAY)
 job_start_date = date(2022, 6, 5)
 yearly_holidays = 30
-holidays_enjoyed = 65
+holidays_enjoyed = 74
 target_holidays = 30
-planned_holiday = None
-salary = 550
-salary_paid_till = date(2025, 4, 30)
+planned_holiday = datetime(2025, 6, 26, 23, 30)
+salary = 600
+salary_paid_till = date(2025, 5, 31)
 other_funds = 0
 
 start_time = (start_time[0] + start_time[1] / 60) * 3600
