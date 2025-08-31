@@ -11,11 +11,11 @@ end_time = (17, 30)
 working_days = (calendar.SUNDAY, calendar.MONDAY, calendar.TUESDAY, calendar.WEDNESDAY, calendar.THURSDAY)
 job_start_date = date(2022, 6, 5)
 yearly_holidays = 30
-holidays_enjoyed = 74
+holidays_enjoyed = 72
 target_holidays = 30
-planned_holiday = datetime(2025, 6, 26, 23, 30)
+planned_holiday = None
 salary = 600
-salary_paid_till = date(2025, 5, 31)
+salary_paid_till = date(2025, 6, 30)
 other_funds = 0
 
 start_time = (start_time[0] + start_time[1] / 60) * 3600
@@ -25,9 +25,9 @@ end_time = (end_time[0] + end_time[1] / 60) * 3600
 class Dialog(QDialog):
     def __init__(self):
         super().__init__()
-        self.setWindowFlag(Qt.WindowMinimizeButtonHint, True)
+        self.setWindowFlags(Qt.WindowType.WindowMinimizeButtonHint | Qt.WindowType.WindowStaysOnTopHint)
         self.setWindowTitle("API")
-        self.resize(1280, 130)
+        self.resize(200, 130)
         a = QVBoxLayout()
         self.daily_bar = QProgressBar()
         self.daily_bar.setStyleSheet("QProgressBar::chunk { background-color: #756AB6; }""QProgressBar { text-align: center; }")
@@ -63,6 +63,7 @@ class Dialog(QDialog):
         day_tot_secs = int(end_time - start_time)
         day_secs = min(max(0, int(curr_time.tm_hour * 3600 + curr_time.tm_min * 60 + curr_time.tm_sec - start_time)), day_tot_secs)
         self.daily_bar.setValue(int(day_secs * 100 / day_tot_secs))
+        self.daily_bar.setFormat(str(timedelta(seconds=day_tot_secs-day_secs)))
 
         week_tot_secs = len(working_days) * day_tot_secs
         if curr_time.tm_wday in working_days:
