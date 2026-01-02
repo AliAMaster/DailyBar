@@ -11,12 +11,12 @@ end_time = (17, 30)
 working_days = (calendar.SUNDAY, calendar.MONDAY, calendar.TUESDAY, calendar.WEDNESDAY, calendar.THURSDAY)
 job_start_date = date(2022, 6, 5)
 yearly_holidays = 30
-holidays_enjoyed = 72
+holidays_enjoyed = 98
 target_holidays = 30
-planned_holiday = datetime(2025, 11, 5, 17, 30)
-salary = 600
-salary_paid_till = date(2025, 7, 31)
-other_funds = 0
+planned_holiday = None
+salary = 850
+salary_paid_till = date(2025, 12, 31)
+other_funds = -6000
 
 start_time = (start_time[0] + start_time[1] / 60) * 3600
 end_time = (end_time[0] + end_time[1] / 60) * 3600
@@ -122,7 +122,7 @@ def planned_holiday_calc(dt: datetime):
     return a
 
 def calc_amount(current_month_percent):
-    month_counter = date.today().month - salary_paid_till.month - 1
+    month_counter = date.today().month + 12 * (date.today().year - salary_paid_till.year)- salary_paid_till.month - 1
     previous_month_percent = (monthrange(salary_paid_till.year, salary_paid_till.month)[1] - salary_paid_till.day) / monthrange(salary_paid_till.year, salary_paid_till.month)[1]
     return (month_counter + current_month_percent / 100 + previous_month_percent) * salary
 
