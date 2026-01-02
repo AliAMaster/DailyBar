@@ -124,7 +124,7 @@ def planned_holiday_calc(dt: datetime):
 def calc_amount(current_month_percent):
     month_counter = date.today().month + 12 * (date.today().year - salary_paid_till.year)- salary_paid_till.month - 1
     previous_month_percent = (monthrange(salary_paid_till.year, salary_paid_till.month)[1] - salary_paid_till.day) / monthrange(salary_paid_till.year, salary_paid_till.month)[1]
-    return (month_counter + current_month_percent / 100 + previous_month_percent) * salary
+    return (month_counter + current_month_percent / 100 + previous_month_percent) * salary + other_funds
 
 
 app = QApplication()
